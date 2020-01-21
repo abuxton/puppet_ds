@@ -1,8 +1,8 @@
 {
   "name": "abuxton-puppet_ds",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "author": "abuxton",
-  "summary": "Module to provide access to the Puppet Enterprise RBAC_API DS endpoint, allowing users to remotely configure Directory Service intergration for the Puppet Enterprise console.",
+  "summary": "Type and Provider or Task based manipulation of the PE RBAC_API",
   "license": "Apache-2.0",
   "source": "https://github.com/abuxton/puppet_ds",
   "project_page": "https://github.com/abuxton/puppet_ds",
@@ -56,5 +56,5 @@
   ],
   "pdk-version": "1.15.0",
   "template-url": "https://github.com/puppetlabs/pdk-templates#1.15.0",
-  "template-ref": "1.15.0-0-g0bc522e"
+  "template-ref": "tags/1.15.0-0-g0bc522e"
 }
