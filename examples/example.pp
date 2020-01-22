@@ -11,7 +11,7 @@ puppet_ds { 'https://pe-201921-master.puppetdebug.vlan:4433':
   help_link                           => 'http://techsmruti.com/online-ldap-test-server/',
   hostname                            => 'ldap.forumsys.com',
   login                               => 'cn=read-only-admin,dc=example,dc=com',
-  password                            => 'password',
+  password                            => Sensitive('password'),
   port                                => 636,
   search_nested_groups                => true,
   ssl                                 => true,

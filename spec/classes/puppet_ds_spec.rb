@@ -5,7 +5,7 @@ describe 'puppet_ds' do
     context "on #{os}" do
       let(:facts) { os_facts }
 
-      it { is_expected.to_not compile }
+      it { is_expected.not_to compile }
     end
   end
 end

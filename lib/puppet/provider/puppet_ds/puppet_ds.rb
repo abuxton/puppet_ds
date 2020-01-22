@@ -8,9 +8,16 @@ class Puppet::Provider::PuppetDs::PuppetDs < Puppet::ResourceApi::SimpleProvider
     current_config = connection.config
     return [] if current_config.empty?
 
+    # Add puppet-specific stuff
     current_config['ensure'] = 'present'
     current_config['name']   = connection.url
     current_config = keys_to_sym(current_config)
+
+    # Wrap the password if it's there
+    if current_config[:password]
+      current_config[:password] = Puppet::Pops::Types::PSensitiveType::Sensitive.new(current_config[:password])
+    end
+
     [current_config]
   end
 
@@ -44,6 +51,11 @@ class Puppet::Provider::PuppetDs::PuppetDs < Puppet::ResourceApi::SimpleProvider
     should.delete(:name)
     should.delete(:ensure)
     should.delete(:force)
+
+    # Unwrap the password if it's there
+    if should[:password].is_a?(Puppet::Pops::Types::PSensitiveType::Sensitive)
+      should[:password] = should[:password].unwrap
+    end
 
     # Add optional keys as the API requires it. But only if they aren't nil
     should[:group_rdn] ||= nil

@@ -40,34 +40,36 @@ RSpec.describe Puppet::Provider::PuppetDs::PuppetDs do
       allow(connection).to receive(:url).and_return('https://foo:4433')
       allow(connection).to receive(:config).and_return(example_config)
 
-      expect(provider.get(context)).to eq [
-        {
-          name: 'https://foo:4433',
-          ensure: 'present',
-          help_link: 'http://techsmruti.com/online-ldap-test-server/',
-          ssl: false,
-          group_name_attr: 'name',
-          password: 'password',
-          connect_timeout: 30,
-          user_display_name_attr: 'displayName',
-          disable_ldap_matching_rule_in_chain: true,
-          ssl_hostname_validation: true,
-          hostname: 'ldap.forumsys.com',
-          base_dn: 'ou=mathematicians,dc=example,dc=com',
-          user_lookup_attr: 'uid',
-          port: 389,
-          login: 'cn=read-only-admin,dc=example,dc=com',
-          group_lookup_attr: 'ou',
-          group_member_attr: 'member',
-          ssl_wildcard_validation: false,
-          user_email_attr: 'mail',
-          user_rdn: 'uid',
-          group_object_class: 'ou',
-          display_name: 'ldap.forumsys.com',
-          search_nested_groups: true,
-          start_tls: false,
-        },
-      ]
+      result = provider.get(context)
+
+      expect(result.length).to eq(1)
+      expect(result[0]).to include(
+        name: 'https://foo:4433',
+        ensure: 'present',
+        help_link: 'http://techsmruti.com/online-ldap-test-server/',
+        ssl: false,
+        group_name_attr: 'name',
+        connect_timeout: 30,
+        user_display_name_attr: 'displayName',
+        disable_ldap_matching_rule_in_chain: true,
+        ssl_hostname_validation: true,
+        hostname: 'ldap.forumsys.com',
+        base_dn: 'ou=mathematicians,dc=example,dc=com',
+        user_lookup_attr: 'uid',
+        port: 389,
+        login: 'cn=read-only-admin,dc=example,dc=com',
+        group_lookup_attr: 'ou',
+        group_member_attr: 'member',
+        ssl_wildcard_validation: false,
+        user_email_attr: 'mail',
+        user_rdn: 'uid',
+        group_object_class: 'ou',
+        display_name: 'ldap.forumsys.com',
+        search_nested_groups: true,
+        start_tls: false,
+      )
+
+      expect(result[0][:password]).to be_an_instance_of(Puppet::Pops::Types::PSensitiveType::Sensitive)
     end
   end
 
@@ -87,6 +89,23 @@ RSpec.describe Puppet::Provider::PuppetDs::PuppetDs do
       )
 
       provider.create(context, 'a', name: 'a', ensure: 'present', help_link: 'test')
+    end
+
+    it 'handles sensitive passwords' do
+      allow(Puppet::Util::PuppetDs::Connection).to receive(:new).and_return(connection)
+      allow(connection).to receive(:url).and_return('https://foo:4433')
+      allow(context).to receive(:debug)
+
+      expect(connection).to receive(:validate)
+      expect(connection).to receive(:config=).with(
+        'help_link' => 'test',
+        'group_rdn' => nil,
+        'login'     => nil,
+        'password'  => 'hunter2',
+        'user_rdn'  => nil,
+      )
+
+      provider.create(context, 'a', name: 'a', ensure: 'present', help_link: 'test', password: Puppet::Pops::Types::PSensitiveType::Sensitive.new('hunter2'))
     end
 
     it 'allows users to skip validation' do
