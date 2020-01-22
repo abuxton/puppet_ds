@@ -5,7 +5,35 @@
 
 The Puppet_ds module encapsulates usage of the rbac_api/v1/ds end point [https://puppet.com/docs/pe/2017.3/rbac_api_v1_directory.html#put-ds](https://puppet.com/docs/pe/2017.3/rbac_api_v1_directory.html#put-ds)for configuring usage of a Directory Service (DS) for Role Based Access and Control(RBAC) of the Puppet Console.
 
-The v 0.1.0, version of this is Puppet Task based only.
+See `REFERENCE.md` for full details
+
+```puppet
+puppet_ds { 'https://pe-201921-master.puppetdebug.vlan:4433':
+  ensure                              => 'present',
+  base_dn                             => 'ou=mathematicians,dc=example,dc=com',
+  connect_timeout                     => 30,
+  disable_ldap_matching_rule_in_chain => true,
+  display_name                        => 'ldap.forumsys.com',
+  group_lookup_attr                   => 'ou',
+  group_member_attr                   => 'member',
+  group_name_attr                     => 'name',
+  group_object_class                  => 'ou',
+  help_link                           => 'http://techsmruti.com/online-ldap-test-server/',
+  hostname                            => 'ldap.forumsys.com',
+  login                               => 'cn=read-only-admin,dc=example,dc=com',
+  password                            => Sensitive('password'),
+  port                                => 636,
+  search_nested_groups                => true,
+  ssl                                 => true,
+  ssl_hostname_validation             => true,
+  ssl_wildcard_validation             => false,
+  start_tls                           => false,
+  user_display_name_attr              => 'displayName',
+  user_email_attr                     => 'mail',
+  user_lookup_attr                    => 'uid',
+  user_rdn                            => 'uid',
+}
+```
 
 #### Table of Contents
 

@@ -20,7 +20,7 @@ Puppet::ResourceApi.register_type(
       help_link                           => 'http://techsmruti.com/online-ldap-test-server/',
       hostname                            => 'ldap.forumsys.com',
       login                               => 'cn=read-only-admin,dc=example,dc=com',
-      password                            => 'password',
+      password                            => Sensitive('password'),
       port                                => 636,
       search_nested_groups                => true,
       ssl                                 => true,
@@ -108,7 +108,7 @@ EOS
       desc: 'The distinguished name (DN) of the directory service user account that PE uses to query information about users and groups in the directory server',
     },
     password: {
-      type: 'Optional[String]',
+      type: 'Optional[Sensitive[String]]',
       desc: 'The lookup user\'s password',
     },
     port: {
